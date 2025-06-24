@@ -1,29 +1,19 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useInitials } from '@/hooks/use-initials';
-import { type User } from '@/types';
+import { usePage } from '@inertiajs/react';
+import { PageProps } from '@/types/type';
 
-export function UserInfo({ user, showEmail = false }: { user?: User | null; showEmail?: boolean }) {
-    const getInitials = useInitials();
-
-    // Pastikan user dan user.name aman untuk dipakai
-    const name = user?.name ?? '';
-    const avatar = user?.avatar ?? '';
+export function UserInfo() {
+    const { props } = usePage<PageProps>();
+    const user = props.auth.user;
 
     return (
-        <>
-            <Avatar className="h-8 w-8 overflow-hidden rounded-full">
-                {avatar ? (
-                    <AvatarImage src={avatar} alt={name} />
-                ) : (
-                    <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                        {getInitials(name)}
-                    </AvatarFallback>
-                )}
-            </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{name || 'No Name'}</span>
-                {showEmail && <span className="truncate text-xs text-muted-foreground">{user?.email ?? 'No Email'}</span>}
+        <div className="flex items-center space-x-3 overflow-hidden">
+            <div className="rounded-full bg-gray-300 h-8 w-8 flex items-center justify-center text-sm font-semibold">
+                {user?.nama?.charAt(0)}
             </div>
-        </>
+            <div className="leading-tight truncate">
+                <p className="text-sm font-medium truncate">{user?.nama ?? 'Guest'}</p>
+                <p className="text-xs text-muted-foreground truncate">{user?.golongan} • {user?.divisi}</p>
+            </div>
+        </div>
     );
 }
